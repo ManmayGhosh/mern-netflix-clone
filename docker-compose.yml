@@ -1,0 +1,53 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: streamly-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: streamly-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb://mongo:27017/netflix-clone
+      JWT_SECRET: ${JWT_SECRET:-dev_only_change_me}
+      CLIENT_URL: http://localhost:5173
+      NODE_ENV: development
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - backend-node-modules:/app/node_modules
+    command: npx nodemon server.js
+
+  frontend:
+    build: ./frontend
+    container_name: streamly-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:5000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+
+volumes:
+  mongo-data:
+  backend-node-modules:
+  frontend-node-modules:
