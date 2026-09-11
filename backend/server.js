@@ -11,7 +11,25 @@ connectDB();
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
+// CLIENT_URL can be a single origin or a comma-separated list, e.g.
+// "https://streamly.vercel.app,http://localhost:5173" — useful once you have
+// both a deployed frontend and are still running things locally.
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim());
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow same-origin/non-browser requests (no Origin header) through
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
+  })
+);
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
