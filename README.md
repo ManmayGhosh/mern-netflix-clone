@@ -125,3 +125,13 @@ Open `http://localhost:5173`, create an account, and browse.
 - **Recommendations**: a simple starting point is "more like this" by shared genre; a real system would use watch history
 - **Payments**: Stripe Billing for subscription tiers
 - **Deployment**: backend to Render/Railway/Fly.io, frontend to Vercel/Netlify, MongoDB Atlas for the database
+
+
+### Streamly — Full-Stack Netflix Clone
+*React, Node.js, Express, MongoDB, Docker* | Sep 2026 – Present
+🔗 [Live Demo](https://mern-netflix-clone-psi.vercel.app/) 
+
+- Built and deployed a full-stack MERN streaming platform with **JWT-authenticated** accounts, live in production across a **3-service stack** (Vercel, Render, MongoDB Atlas)
+- Containerized the entire dev environment with **Docker Compose**, orchestrating MongoDB, the Express API, and the Vite frontend with hot-reload across all 3 services
+- Implemented full-text search, genre-based filtering, and a persistent per-user watchlist over a **100-title** synthetic catalog using MongoDB text indexes and a RESTful API
+- Designed a custom **glassmorphism UI** in React, then independently diagnosed and resolved production-specific issues (CORS origin mismatches, SPA routing fallbacks, environment-variable scoping) to ship a fully working live deployment
